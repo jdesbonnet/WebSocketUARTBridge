@@ -24,7 +24,9 @@ import org.java_websocket.server.WebSocketServer;
  * Uses Java Simple Serial Connector to interface with serial port devices.
  * https://github.com/scream3r/java-simple-serial-connector/
  * 
- *
+ * WebSocket library: http://java-websocket.org/
+ * https://github.com/TooTallNate/Java-WebSocket
+ * 
  * @author Joe Desbonnet, jdesbonnet@gmail.com
  *
  */
@@ -40,6 +42,10 @@ public class WebSocketUARTBridge extends WebSocketServer {
 		super(address);
 	}
 
+	private static void usage() {
+		System.out.println("Parameters: <websocket-port> <uart-device>");
+	}
+	
 	/**
 	 * Handle incoming message from WebSocket which is a line of text
 	 * to be transmitted to the UART. A CR is added to the received
@@ -63,13 +69,18 @@ public class WebSocketUARTBridge extends WebSocketServer {
 	public static void main(String[] args) throws InterruptedException,
 			IOException,SerialPortException {
 		
-		WebSocketImpl.DEBUG = true;
+		WebSocketImpl.DEBUG = false;
 		
 		// List serial ports
 		System.err.println ("Available serial ports:");
 		String[] portNames = SerialPortList.getPortNames();
 		for(int i = 0; i < portNames.length; i++){
-	            System.err.println(portNames[i]);
+			System.err.println(portNames[i]);
+		}
+		
+		if (args.length < 2) {
+			usage();
+			return;
 		}
 		
 		String serialPortDevice = args[1];
